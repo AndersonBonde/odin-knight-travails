@@ -48,14 +48,11 @@ function knightMoves(initial, final) {
   if(!Array.isArray(final)) throw new Error('Final value must be an array');
   
   let queue = [];
-  let levelOrder = [];
   let found = false;
-
   queue.push(knight(initial));
 
   while(!found) {
     let curr = queue.shift();
-    levelOrder.push(curr.pos);
     for(let value of curr.next) {
       queue.push(knight(value, curr.step + 1, curr));
     }
@@ -66,17 +63,17 @@ function knightMoves(initial, final) {
     }
   }
 }
-let test = knightMoves([0, 0], [7, 7]);
 
 function getSteps(knight) {
   let arr = [];
-
+  
   while(knight.parent !== null) {
     arr.push(knight.pos);
     knight = knight.parent;
   }
   arr.push(knight.pos);
-
+  
   return arr.reverse();
 }
+let test = knightMoves([0, 0], [7, 7]);
 console.log(`You made it in ${test.step} moves! Here's your path: \n`, getSteps(test));
