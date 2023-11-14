@@ -22,7 +22,7 @@ function gameBoard() {
 }
 let myBoard = gameBoard();
 
-function knight(pos = [0, 0], step = 0) {
+function knight(pos = [0, 0], step = 0, parent = null) {
   let next = nextPossibleMoves(pos);
 
   function nextPossibleMoves(from) {
@@ -40,7 +40,7 @@ function knight(pos = [0, 0], step = 0) {
     return arr.filter((value) => myBoard.has(value));
   }
 
-  return { pos, next, step };
+  return { pos, next, step, parent };
 }
 
 function knightMoves(initial, final) {
@@ -57,14 +57,26 @@ function knightMoves(initial, final) {
     let curr = queue.shift();
     levelOrder.push(curr.pos);
     for(let value of curr.next) {
-      queue.push(knight(value, curr.step + 1));
+      queue.push(knight(value, curr.step + 1, curr));
     }
 
     if(curr.pos[0] == final[0] && curr.pos[1] == final[1]) {
       found = true;
-      return curr.step;
+      return curr;
     }
   }
 }
-let test = knightMoves([1, 2], [6, 7]);
-console.log(`You made it in ${test} moves!`);
+let test = knightMoves([0, 0], [7, 7]);
+
+function getSteps(knight) {
+  let arr = [];
+
+  while(knight.parent !== null) {
+    arr.push(knight.pos);
+    knight = knight.parent;
+  }
+  arr.push(knight.pos);
+
+  return arr.reverse();
+}
+console.log(`You made it in ${test.step} moves! Here's your path: \n`, getSteps(test));
